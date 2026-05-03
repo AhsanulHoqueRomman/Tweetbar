@@ -8,14 +8,14 @@ def index(request):
 
 def tweet_list(request):
     tweets = Tweet.objects.all().order_by('-created_at')
-    return render(request, 'tweet_list.html', name = 'tweet_list')
+    return render(request, 'tweet_list.html', {'tweets': tweets})
 
 def tweet_create(request):
     if request.method == 'POST':
         form =TweetForm(request.POST, request.FILES)
-        if form.is_valid:
+        if form.is_valid():
             tweet = form.save(commit=False)
-            tweet.user == request.user
+            tweet.user = request.user
             tweet.save()
             return redirect('tweet_list')
     else:
@@ -41,7 +41,7 @@ def tweet_delete(request, tweet_id):
     if request.method =='POST':
         tweet.delete()
         return redirect('tweet_list')
-    return render(request, 'tweet_confirm-delete.html',  {'tweet':tweet})
+    return render(request, 'tweet_confirm-delete.html',  {'tweet':tweet}) 
 
     
 
