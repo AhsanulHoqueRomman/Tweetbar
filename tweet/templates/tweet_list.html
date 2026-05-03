@@ -1,55 +1,60 @@
-  {% extends "layout.html" %}
+{% extends "layout.html" %}
 
 {% block title %}
-Tweet
+Twitter
 {% endblock %}
 
 {% block content %}
+
 <div class="container py-5">
 
-    <!-- Heading Section -->
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+
         <div>
-            <h1 class="fw-bold mb-1">Welcome To Twitter 🐦</h1>
-            <p class="text-muted mb-0">
+            <h1 class="fw-bold display-6 mb-1">
+                Welcome to Twitter 🐦
+            </h1>
+
+            <p class="text-secondary mb-0">
                 Share your thoughts with the world.
             </p>
         </div>
 
-        <a class="btn btn-dark px-4 py-2 rounded-pill shadow-sm"
-           href="{% url 'tweet_create' %}">
+        <a href="{% url 'tweet_create' %}"
+           class="btn btn-dark rounded-pill px-4 py-2 shadow-sm">
             + Create Tweet
         </a>
+
     </div>
 
+    <!-- Tweet Feed -->
     <div class="row g-4">
 
         {% for tweet in tweets %}
 
         <div class="col-md-6 col-lg-4">
 
-            <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
+            <div class="card border-0 shadow-sm rounded-4 h-100 tweet-card">
 
                 {% if tweet.photo %}
                 <img src="{{ tweet.photo.url }}"
                      class="card-img-top"
-                     style="height: 240px; object-fit: cover;"
-                     alt="Tweet Photo">
+                     alt="Tweet Image"
+                     style="height: 240px; object-fit: cover;">
                 {% endif %}
 
-                <div class="card-body d-flex flex-column">
+                <div class="card-body p-4 d-flex flex-column">
 
-                    <!-- User Info -->
+                    <!-- User -->
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-dark text-white rounded-circle d-flex justify-content-center align-items-center"
-                             style="width: 45px; height: 45px; font-size: 18px;">
 
+                        <div class="avatar-circle">
                             {{ tweet.user.username|first|upper }}
-
                         </div>
 
                         <div class="ms-3">
-                            <h6 class="mb-0 fw-semibold">
+                            <h6 class="fw-semibold mb-0">
                                 {{ tweet.user.username }}
                             </h6>
 
@@ -57,29 +62,31 @@ Tweet
                                 {{ tweet.created_at|date:"M d, Y" }}
                             </small>
                         </div>
+
                     </div>
 
-                    <!-- Tweet Text -->
-                    <p class="card-text text-secondary flex-grow-1">
+                    <!-- Text -->
+                    <p class="text-secondary flex-grow-1 mb-4">
                         {{ tweet.text }}
                     </p>
 
                     <!-- Buttons -->
-                    <div class="d-flex gap-2 mt-3">
+                    <div class="d-flex gap-2">
 
                         <a href="{% url 'tweet_edit' tweet.id %}"
-                           class="btn btn-outline-primary w-100 rounded-pill">
+                           class="btn btn-light border rounded-pill w-100">
                             Edit
                         </a>
 
                         <a href="{% url 'tweet_delete' tweet.id %}"
-                           class="btn btn-outline-danger w-100 rounded-pill">
+                           class="btn btn-danger rounded-pill w-100">
                             Delete
                         </a>
 
                     </div>
 
                 </div>
+
             </div>
 
         </div>
@@ -87,5 +94,7 @@ Tweet
         {% endfor %}
 
     </div>
+
 </div>
+
 {% endblock %}
