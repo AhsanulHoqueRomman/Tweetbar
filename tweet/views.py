@@ -42,7 +42,6 @@ def tweet_edit(request, tweet_id):
     return render(request,'tweet_form.html',{'form': form})
 
 
-# Delete Tweet
 def tweet_delete(request, tweet_id):
     tweet = get_object_or_404(Tweet,pk=tweet_id,user=request.user)
     if request.method == 'POST':
