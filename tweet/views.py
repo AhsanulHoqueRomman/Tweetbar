@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Tweet
-from .forms import TweetForm, UserRegistrationForm, UserCreationForm
+from .forms import TweetForm, UserRegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 
@@ -69,17 +69,4 @@ def register(request):
 
     return render(request, 'registration/register.html', {'form': form})
 
-def login(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user=form.save(commit = False)
-            user.save()
-            login(request, user)
-            return redirect('tweet_list')
-        
-    else:
-        form = UserCreationForm()
-
-    return redirect(request, 'registration/login.html', {'form' : form})
 
