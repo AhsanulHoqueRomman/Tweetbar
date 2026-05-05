@@ -1,13 +1,30 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Tweet
-from .forms import TweetForm, UserRegistrationForm
+from .models import Tweet,Profile
+from .forms import TweetForm, UserRegistrationForm,ProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 
 def tweet_list(request):
     tweets = Tweet.objects.all().order_by('-created_at')
     return render(request,'tweet_list.html',{'tweets': tweets})
 
+def profile_view(request, username):
+    profile_user = User.objects.get(username=username)
+    tweets = Tweet.objects.filter(user=profile_user).order_by('-created_at')
+    return render(request,'profile.html',{'profile_user': profile_user,'tweets': tweets})
+
+@login_required
+def edit_profile(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = ProfileForm(request.POST,request.FILES,instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile',username=request.user.username)
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request,'edit_profile.html',{'form': form})
 
 # Search View
 def search_tweet(request):

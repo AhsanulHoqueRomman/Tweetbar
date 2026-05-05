@@ -1,0 +1,231 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ profile_user.username }} Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Profile Header -->
+    <div class="card border-0 rounded-5 overflow-hidden mb-5"
+         style="background: #111827;">
+
+        <!-- Cover -->
+        <div style="
+            height: 180px;
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #7c3aed
+            );
+        ">
+        </div>
+
+        <!-- Profile Content -->
+        <div class="px-5 pb-5">
+
+            <!-- Avatar -->
+            <div class="d-flex justify-content-between flex-wrap">
+
+                <div>
+
+                    {% if profile_user.profile.profile_picture %}
+
+                    <img src="{{ profile_user.profile.profile_picture.url }}"
+                         class="rounded-circle border border-4 border-dark shadow"
+                         style="
+                            width: 130px;
+                            height: 130px;
+                            object-fit: cover;
+                            margin-top: -65px;
+                         ">
+
+                    {% else %}
+
+                    <div class="rounded-circle d-flex align-items-center justify-content-center border border-4 border-dark shadow"
+                         style="
+                            width: 130px;
+                            height: 130px;
+                            background: #2563eb;
+                            font-size: 42px;
+                            font-weight: 700;
+                            margin-top: -65px;
+                         ">
+
+                        {{ profile_user.username|first|upper }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% if request.user == profile_user %}
+
+                <div class="mt-4">
+
+                    <a href="{% url 'edit_profile' %}"
+                       class="btn btn-primary rounded-pill px-4">
+
+                        Edit Profile
+
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- User Info -->
+            <div class="mt-4">
+
+                <h2 class="fw-bold mb-1">
+                    {{ profile_user.username }}
+                </h2>
+
+                <p class="text-secondary mb-3">
+
+                    {% if profile_user.profile.bio %}
+
+                        {{ profile_user.profile.bio }}
+
+                    {% else %}
+
+                        No bio added yet.
+
+                    {% endif %}
+
+                </p>
+
+                <div class="d-flex gap-3">
+
+                    <div class="badge rounded-pill text-bg-primary px-3 py-2">
+
+                        {{ tweets.count }} Tweets
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Tweets -->
+    <div class="row g-4">
+
+        {% for tweet in tweets %}
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="card border-0 rounded-4 overflow-hidden h-100">
+
+                {% if tweet.photo %}
+
+                <img src="{{ tweet.photo.url }}"
+                     class="w-100"
+                     style="
+                        height: 260px;
+                        object-fit: cover;
+                     ">
+
+                {% endif %}
+
+                <div class="card-body p-4">
+
+                    <!-- Top -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div>
+
+                            <h6 class="fw-bold mb-1">
+                                {{ tweet.user.username }}
+                            </h6>
+
+                            <small class="text-secondary">
+                                {{ tweet.created_at|date:"M d, Y" }}
+                            </small>
+
+                        </div>
+
+                        {% if request.user == profile_user %}
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+
+                            <button class="btn btn-sm btn-dark rounded-circle"
+                                    data-bs-toggle="dropdown">
+
+                                ⋮
+
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-dark border-0 shadow">
+
+                                <li>
+
+                                    <a class="dropdown-item"
+                                       href="{% url 'tweet_edit' tweet.id %}">
+
+                                        ✏️ Edit Post
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <a class="dropdown-item text-danger"
+                                       href="{% url 'tweet_delete' tweet.id %}">
+
+                                        🗑 Delete Post
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Text -->
+                    <p class="text-light mb-0">
+
+                        {{ tweet.text }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="text-center py-5">
+
+            <h4 class="fw-bold">
+                No tweets yet.
+            </h4>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
