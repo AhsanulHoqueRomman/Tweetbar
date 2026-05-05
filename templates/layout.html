@@ -91,6 +91,16 @@
                 + Tweet
             </a>
 
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger mx-3">Log Out</button>
+            </form>
+            {% else %}
+            <a class="btn btn-success mx-1"href="{% url 'login' %}">LogIn</a>
+            <a class="btn btn-primary mx-1"href="{% url 'register' %}">Register</a>
+            {% endif %}
+
         </div>
 
     </div>

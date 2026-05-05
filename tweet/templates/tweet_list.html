@@ -10,29 +10,23 @@ Twitter
 
     <!-- Heading -->
     <div class="mb-5">
-
         <h1 class="fw-bold display-6 mb-2">
             Welcome to Twitter 🐦
         </h1>
-
         <p class="text-secondary mb-0">
             Share your thoughts with the world.
         </p>
-
     </div>
 
-    <!-- Search Result -->
+
     {% if query %}
-
     <div class="mb-4">
-
         <p class="text-secondary">
             Search result for:
             <span class="fw-semibold text-light">
                 "{{ query }}"
             </span>
         </p>
-
     </div>
 
     {% endif %}
@@ -41,41 +35,28 @@ Twitter
     <div class="row g-4">
 
         {% for tweet in tweets %}
-
         <div class="col-md-6 col-lg-4">
-
             <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
-
                 {% if tweet.photo %}
-
                 <img src="{{ tweet.photo.url }}"
                      class="card-img-top"
                      alt="Tweet Image"
                      style="height: 240px; object-fit: cover;">
-
                 {% endif %}
 
                 <div class="card-body p-4 d-flex flex-column">
-
-                    <!-- User -->
                     <div class="d-flex align-items-center mb-3">
-
                         <div class="avatar-circle">
                             {{ tweet.user.username|first|upper }}
                         </div>
-
                         <div class="ms-3">
-
                             <h6 class="fw-semibold mb-0">
                                 {{ tweet.user.username }}
                             </h6>
-
                             <small class="text-secondary">
                                 {{ tweet.created_at|date:"M d, Y" }}
                             </small>
-
                         </div>
-
                     </div>
 
                     <!-- Tweet Text -->
@@ -85,7 +66,7 @@ Twitter
 
                     <!-- Buttons -->
                     <div class="d-flex gap-2">
-
+                        {%  if tweet.user == user %}
                         <a href="{% url 'tweet_edit' tweet.id %}"
                            class="btn btn-outline-light rounded-pill w-100">
                             Edit
@@ -95,6 +76,8 @@ Twitter
                            class="btn btn-danger rounded-pill w-100">
                             Delete
                         </a>
+
+                        {% endif %}
 
                     </div>
 
