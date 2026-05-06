@@ -34,58 +34,70 @@ Search Result
             <div class="card border-0 shadow-sm rounded-4 h-100 tweet-card">
 
                 {% if tweet.photo %}
-
                 <img
                     src="{{ tweet.photo.url }}"
                     class="card-img-top"
                     style="height: 240px; object-fit: cover;"
                 >
-
                 {% endif %}
 
                 <div class="card-body p-4 d-flex flex-column">
 
+                    <!-- User -->
                     <div class="d-flex align-items-center mb-3">
 
                         <div class="avatar-circle">
                             {{ tweet.user.username|first|upper }}
                         </div>
 
-                        <div class="ms-3">
+                        <div class="ms-3 flex-grow-1">
 
                             <h6 class="mb-0 fw-semibold">
                                 {{ tweet.user.username }}
                             </h6>
 
-                            <small class="text-muted">
+                            <small class="text-secondary">
                                 {{ tweet.created_at|date:"M d, Y" }}
                             </small>
 
                         </div>
 
+                        <!-- Dropdown (only for owner) -->
+                        {% if tweet.user == user %}
+                        <div class="dropdown">
+
+                            <button class="btn btn-sm btn-light rounded-circle"
+                                    data-bs-toggle="dropdown">
+                                ⋮
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'tweet_edit' tweet.id %}">
+                                        ✏️ Edit
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item text-danger"
+                                       href="{% url 'tweet_delete' tweet.id %}">
+                                        🗑 Delete
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                        {% endif %}
+
                     </div>
 
-                    <p class="text-light flex-grow-1">
+                    <!-- Text -->
+                    <p class="text-light flex-grow-1 mb-0">
                         {{ tweet.text }}
                     </p>
-
-                    <div class="d-flex gap-2 mt-3">
-
-                        <a
-                            href="{% url 'tweet_edit' tweet.id %}"
-                            class="btn btn-light rounded-pill w-100"
-                        >
-                            Edit
-                        </a>
-
-                        <a
-                            href="{% url 'tweet_delete' tweet.id %}"
-                            class="btn btn-danger rounded-pill w-100"
-                        >
-                            Delete
-                        </a>
-
-                    </div>
 
                 </div>
 
@@ -95,15 +107,19 @@ Search Result
 
         {% empty %}
 
-        <div class="text-center py-5">
+        <div class="col-12">
 
-            <h3 class="fw-bold">
-                No Tweets Found 😢
-            </h3>
+            <div class="text-center py-5">
 
-            <p class="text-secondary">
-                Try another keyword.
-            </p>
+                <h3 class="fw-bold">
+                    No Tweets Found 😢
+                </h3>
+
+                <p class="text-secondary">
+                    Try another keyword.
+                </p>
+
+            </div>
 
         </div>
 
