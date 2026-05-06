@@ -9,77 +9,180 @@ Twitter
 <div class="container py-5">
 
     <!-- Heading -->
-    <div class="mb-5">
-        <h1 class="fw-bold display-6 mb-2">
-            Welcome to Tweetbar 🐦
-        </h1>
-        <p class="text-secondary mb-0">
-            Share your thoughts with the world.
-        </p>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-5">
+
+        <div>
+
+            <h1 class="fw-bold display-6 mb-2">
+                Welcome to Tweetbar 🐦
+            </h1>
+
+            <p class="text-secondary mb-0">
+                Share your thoughts with the world.
+            </p>
+
+        </div>
+
     </div>
 
 
+    <!-- Search Result -->
     {% if query %}
+
     <div class="mb-4">
-        <p class="text-secondary">
+
+        <p class="text-secondary mb-0">
+
             Search result for:
+
             <span class="fw-semibold text-light">
                 "{{ query }}"
             </span>
+
         </p>
+
     </div>
 
     {% endif %}
 
-    <!-- Tweets -->
+
+
+    <!-- Tweet Grid -->
     <div class="row g-4">
 
         {% for tweet in tweets %}
+
         <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+
+            <div class="card border-0 rounded-4 overflow-hidden h-100">
+
+                <!-- Tweet Image -->
                 {% if tweet.photo %}
+
                 <img src="{{ tweet.photo.url }}"
-                     class="card-img-top"
+                     class="w-100"
                      alt="Tweet Image"
-                     style="height: 240px; object-fit: cover;">
+                     style="
+                        height: 240px;
+                        object-fit: cover;
+                     ">
+
                 {% endif %}
 
+                <!-- Card Body -->
                 <div class="card-body p-4 d-flex flex-column">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar-circle">
-                            {{ tweet.user.username|first|upper }}
+
+                    <!-- User + Dropdown -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div class="d-flex align-items-center">
+
+                            <!-- Avatar -->
+                            {% if tweet.user.profile.profile_picture %}
+
+                            <img src="{{ tweet.user.profile.profile_picture.url }}"
+                                 class="rounded-circle"
+                                 style="
+                                    width: 48px;
+                                    height: 48px;
+                                    object-fit: cover;
+                                 ">
+
+                            {% else %}
+
+                            <div class="avatar-circle">
+
+                                {{ tweet.user.username|first|upper }}
+
+                            </div>
+
+                            {% endif %}
+
+                            <!-- User Info -->
+                            <div class="ms-3">
+
+                                <h6 class="fw-semibold mb-1">
+
+                                    <a href="{% url 'profile' tweet.user.username %}"
+                                       class="text-decoration-none text-light">
+
+                                        {{ tweet.user.username }}
+
+                                    </a>
+
+                                </h6>
+
+                                <small class="text-secondary">
+
+                                    {{ tweet.created_at|date:"M d, Y" }}
+
+                                </small>
+
+                            </div>
+
                         </div>
-                        <div class="ms-3">
-                            <h6 class="fw-semibold mb-0">
-                                {{ tweet.user.username }}
-                            </h6>
-                            <small class="text-secondary">
-                                {{ tweet.created_at|date:"M d, Y" }}
-                            </small>
+
+
+                        <!-- Dropdown -->
+                        {% if tweet.user == user %}
+
+                        <div class="dropdown">
+
+                            <button class="btn btn-sm btn-dark rounded-circle border-0"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    style="
+                                        width: 38px;
+                                        height: 38px;
+                                    ">
+
+                                ⋮
+
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-dark border-0 shadow">
+
+                                <li>
+
+                                    <a class="dropdown-item"
+                                       href="{% url 'tweet_edit' tweet.id %}">
+
+                                        ✏️ Edit Post
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <a class="dropdown-item text-danger"
+                                       href="{% url 'tweet_delete' tweet.id %}">
+
+                                        🗑 Delete Post
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
                         </div>
-                    </div>
-
-                    <!-- Tweet Text -->
-                    <p class="text-light flex-grow-1 mb-4">
-                        {{ tweet.text }}
-                    </p>
-
-                    <!-- Buttons -->
-                    <div class="d-flex gap-2">
-                        {%  if tweet.user == user %}
-                        <a href="{% url 'tweet_edit' tweet.id %}"
-                           class="btn btn-outline-light rounded-pill w-100">
-                            Edit
-                        </a>
-
-                        <a href="{% url 'tweet_delete' tweet.id %}"
-                           class="btn btn-danger rounded-pill w-100">
-                            Delete
-                        </a>
 
                         {% endif %}
 
                     </div>
+
+
+                    <!-- Tweet Text -->
+                    <p class="text-light flex-grow-1 mb-0"
+                       style="
+                            line-height: 1.7;
+                            color: #e2e8f0;
+                       ">
+
+                        {{ tweet.text }}
+
+                    </p>
 
                 </div>
 
@@ -89,14 +192,20 @@ Twitter
 
         {% empty %}
 
-        <!-- Empty Search Result -->
-
+        <!-- Empty State -->
         <div class="col-12">
 
-            <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+            <div class="card border-0 rounded-4 p-5 text-center">
 
-                <h3 class="fw-bold mb-3">
-                    No Tweets Found 😢
+                <div class="mb-3"
+                     style="font-size: 56px;">
+
+                    😢
+
+                </div>
+
+                <h3 class="fw-bold mb-2">
+                    No Tweets Found
                 </h3>
 
                 <p class="text-secondary mb-0">
